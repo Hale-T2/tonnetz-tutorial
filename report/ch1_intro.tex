@@ -1,0 +1,95 @@
+\chapter{Introduction: a map of harmony}\label{ch:intro}
+
+\section{Why a map?}
+Musicians have always used spatial language for harmony: chords are ``close'' or ``distant'', a modulation
+``travels'' to a ``remote'' key, a progression ``returns home''. The Tonnetz makes this language literal. It is a
+diagram in which every point is a note and every small triangle is a chord, arranged so that geometric nearness
+tracks a musical notion of nearness: two triangles that share an edge are two chords that share two notes and
+can be connected by moving a single voice a short distance.
+
+Once the picture is drawn, three branches of mathematics appear at once. As a \emph{graph} it invites questions
+about paths and cycles: can we walk through all 24 major and minor chords, each exactly once, moving only between
+neighbours? As a \emph{group action} it explains why transposing a progression preserves its shape. As a
+\emph{surface} it has a topology: when the diagram is wrapped up so that each note appears only once, it becomes a
+torus, and variants built from other chords become cylinders, spheres, M\"obius bands or even the real projective
+plane. The goal of this report is to develop all three views carefully, to compute everything that can be
+computed, and finally to test the map against real music.
+
+\section{A short history}
+\paragraph{Euler (1739).} Leonhard Euler's \emph{Tentamen novae theoriae musicae} \citep{euler1739} contains a
+small lattice of note names in which horizontal neighbours differ by a perfect fifth and vertical neighbours by a
+major third. For Euler, working in just intonation, the lattice was a way to organise frequency ratios built from
+the primes 3 and 5; it was not yet a theory of chord progressions.
+
+\paragraph{Nineteenth-century dualism.} Arthur von Oettingen \citep{oettingen1866} and Hugo Riemann
+\citep{riemann1893} revived and extended the lattice (the German \emph{Tonnetz} is Riemann's usage). Their
+harmonic ``dualism'' treated minor triads as mirror images of major ones, an idea that survives in the
+inversional symmetry of Chapter~\ref{ch:prelims}.
+
+\paragraph{Transformational and neo-Riemannian theory.} David Lewin's \emph{Generalized Musical Intervals and
+Transformations} \citep{lewin1987} recast music theory in the language of groups acting on sets. Richard Cohn
+then isolated three ``parsimonious'' transformations, $P$ (parallel), $L$ (leading-tone exchange) and $R$
+(relative), that move a triad to another triad by shifting one voice by a semitone or a whole tone
+\citep{cohn1996,cohn1997,cohn1998}. The Tonnetz became the natural stage for these operations, and a large body of
+analysis of chromatic nineteenth-century music followed \citep{cohn2012}, extended later to popular music
+\citep{capuzzo2004}.
+
+\paragraph{Geometry and topology.} From the late 1990s mathematicians and theorists studied the Tonnetz as a
+space. Douthett and Steinbach introduced the ``chicken-wire torus'', the dual graph on triads
+\citep{douthett1998}; Crans, Fiore and Satyendra showed that the $PLR$ group is dihedral of order 24 and is the
+dual of the transposition/inversion group \citep{crans2009}. Tymoczko connected chord spaces to orbifolds and
+voice leading \citep{callender2008,tymoczko2011,tymoczko2012}, and Catanzaro classified the topology of every
+``generalized Tonnetz'' built from a single trichord type in any equal temperament \citep{catanzaro2011}. Bigo and
+collaborators represented chord collections as simplicial complexes and built the HexaChord software
+\citep{bigo2013,bigo2016}. Yust \citep{yust2020}, Jevti\'c and \v{Z}ivaljevi\'c \citep{jevtic2021} and, most
+recently, Boland and Hughston \citep{boland2025,boland2026} continue to generalise the construction, the latter
+linking the Tonnetz to classical point--line configurations.
+
+\paragraph{Computation and data.} In parallel, music information retrieval adopted the Tonnetz as a feature:
+the tonal centroid of Harte, Sandler and Gasser \citep{harte2006} is implemented in the \code{librosa} library
+\citep{mcfee2015} and used in chord recognition, and the Tonnetz has been used as an input representation for
+neural networks \citep{chuan2018} and for genre classification from Tonnetz trajectories \citep{karystinaios2020}.
+Large open chord corpora, notably ChoCo \citep{deberardinis2023} and Chordonomicon \citep{kantarelis2024}, now
+make it possible to test Tonnetz-based hypotheses at scale; Xu, Hall and Rohrmeier's recent study of tonal
+coherence on the Tonnetz across 2,800 pieces \citep{xu2026} is an example.
+
+\section{What this report adds}
+Beyond a unified tutorial exposition, the report contributes a set of verified, reproducible computations:
+\begin{enumerate}
+\item an independent enumeration of Hamiltonian cycles in the dual graph (62 undirected, 124 directed, as reported
+by Albini and Antonini \citep{albini2009}) together with their classification into eight symmetry orbits and their
+voice-leading costs (Chapter~\ref{ch:ham});
+\item a machine-checked table of all twelve generalized Tonnetze in 12-tone equal temperament, including the
+parity phenomenon that turns the chromatic strip into a M\"obius band for odd $N$ (Chapter~\ref{ch:topology});
+\item a reconstruction of the presentation's whole-tone ``edge Tonnetz'' as a triangulated real projective plane,
+contrasted with the actual pitch-class complex and with a Monte-Carlo census of edge-labelled gluings
+(Chapter~\ref{ch:nonorient});
+\item a four-corpus study with a shuffling null model (Chapter~\ref{ch:data}).
+\end{enumerate}
+
+\begin{keybox}[The one-sentence summary]
+The Tonnetz is a triangulated torus whose vertices are the twelve notes and whose 24 triangles are the major
+and minor triads; its dual is a 3-regular graph on those triads in which each edge is one of Cohn's
+single-voice moves $P$, $L$ or $R$.
+\end{keybox}
+
+\begin{qa}
+\Qu{In one sentence each, what are the three mathematical ``views'' of the Tonnetz used in this report?}
+\A{As a graph (notes or chords joined by musical relations, studied through paths and cycles); as a group action
+(transposition, inversion and the $P,L,R$ operations acting on chords); and as a surface (a triangulated torus
+whose topology can be computed).}
+\Qu{Why was Euler's original lattice not yet a torus?}
+\A{Euler worked in just intonation, where no two lattice points have exactly the same frequency ratio, so the
+lattice is an infinite plane. The torus appears only after identifying notes that are equal in 12-tone equal
+temperament (Chapter~\ref{ch:tonnetz}).}
+\Qu{Which three operations did Cohn call parsimonious, and what makes them parsimonious?}
+\A{$P$, $L$ and $R$. Each keeps two notes of a triad fixed and moves the third by a semitone ($P$, $L$) or a
+whole tone ($R$), so the voice leading is as small as possible between a major and a minor triad.}
+\Qu{Name one audio-processing tool that uses the Tonnetz.}
+\A{The tonal-centroid (``tonnetz'') feature of Harte, Sandler and Gasser, available as
+\code{librosa.feature.tonnetz}; it projects a chroma vector onto three circles (fifths, minor thirds, major
+thirds).}
+\Qu{What is the practical difference between a tutorial review and a research article?}
+\A{A tutorial review re-derives known results in a teachable order and points to the literature; this one also
+adds reproducible code and a few new computations, but its main purpose is to make the field accessible.}
+\end{qa}

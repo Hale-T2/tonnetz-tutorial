@@ -1,0 +1,49 @@
+\chapter{Repository guide and reproduction}\label{app:repo}
+
+\section{Layout}
+\begin{lstlisting}[language={}]
+tonnetz-tutorial/
+  tonnetzkit/   core.py (triads, P/L/R)
+                graphs.py (dual graph, Hamiltonian cycles)
+                topology.py (complexes, homology, orientability)
+                edge_tonnetz.py (edge gluings)
+                chords.py (parsers, loaders, tonal centroid)
+  book/         00_welcome ... 09_research_sandbox.ipynb, _toc.yml
+  scripts/      fetch_data.sh, corpus_analysis.py, make_figures.py
+  report/       main.tex, ch*.tex, references.bib, figures/
+  results/      corpus_stats.json
+  tests/        test_tonnetzkit.py (pins every number in the report)
+\end{lstlisting}
+
+\section{Reproducing everything}
+\begin{lstlisting}[language=bash]
+pip install -e ".[dev,audio,corpora]"      # or: pip install -r requirements.txt
+pytest -q                                   # 8 tests, about 2 s
+bash scripts/fetch_data.sh                  # Beethoven (ABC) + NYU MARL chord labels
+python scripts/corpus_analysis.py           # Table 8.2 -> results/corpus_stats.json
+python scripts/make_figures.py              # all figures -> report/figures/
+jupyter-book build book/                    # the Python sheets as a website
+cd report && latexmk -pdf main.tex          # this report
+\end{lstlisting}
+The GitHub Actions workflow in \code{.github/workflows/ci.yml} runs the tests on every push and publishes the
+Jupyter Book to GitHub Pages from the \code{main} branch.
+
+\section{Map from chapters to sheets}
+\begin{center}\footnotesize
+\begin{tabular}{@{}p{2.8cm}p{4.4cm}p{8.2cm}@{}}\toprule
+Chapter & Sheet & Main functions\\\midrule
+2 Preliminaries & \code{01\_pitch\_classes} & \code{pc}, \code{transpose}, \code{invert}, \code{trichord\_classes}\\
+3 Tonnetz & \code{02\_tonnetz\_torus} & \code{generalized\_tonnetz}, \code{classify\_surface}\\
+4 $PLR$ & \code{03\_plr\_dual} & \code{P}, \code{L}, \code{R}, \code{plr\_graph}, \code{apply\_word}\\
+5 Hamiltonian & \code{04\_hamiltonian} & \code{hamiltonian\_cycles}, \code{symmetry\_classes}\\
+6 Topology & \code{05\_generalized\_tonnetze} & \code{SimplicialComplex.betti}, \code{is\_orientable}\\
+7 Non-orientable & \code{06\_edge\_tonnetz} & \code{essential\_notes}, \code{sample\_edge\_tonnetze}\\
+8 Data & \code{07\_corpus\_analysis},\newline\code{08\_audio\_centroid} & \code{harte\_to\_triad}, \code{load\_dcml\_corpus}, \code{tonal\_centroid}\\
+9 Outlook & \code{09\_research\_sandbox} & --\\\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Data licences}
+The repository contains no third-party data. \code{fetch\_data.sh} downloads the Annotated Beethoven Corpus
+(CC BY-NC-SA 4.0; cite \citep{neuwirth2018}) and the NYU MARL chord annotations (cite the repository and the RWC
+database \citep{goto2002}); Bach chorales are loaded from the music21 corpus. Users must respect each source's terms.

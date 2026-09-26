@@ -1,0 +1,122 @@
+\chapter{Mathematical preliminaries}\label{ch:prelims}
+This chapter collects the small amount of algebra, graph theory and topology used later. Readers comfortable
+with modular arithmetic, graphs and the Euler characteristic can skip to Chapter~\ref{ch:tonnetz}.
+
+\section{Pitch classes and intervals}
+In 12-tone equal temperament (12-TET) the octave is divided into twelve equal semitones. Two identifications
+turn pitches into \emph{pitch classes}: \emph{octave equivalence} (C4 and C5 are the same class) and
+\emph{enharmonic equivalence} (F$\sharp$ and G$\flat$ are the same key on the piano). The set of pitch classes is
+then the cyclic group $\Z_{12}=\{0,1,\dots,11\}$ with addition mod 12, where $C=0$.
+
+An \emph{interval} from $x$ to $y$ is $y-x \bmod 12$. The musically important ones here are the minor third (3),
+major third (4) and perfect fifth (7). Note that $3+4=7$ and $3+4+5=12$: a stack of a minor third, a major third
+and a perfect fourth (5) closes the octave. This numerical coincidence is the reason the Tonnetz exists.
+
+\begin{definition}
+A \emph{trichord} is a 3-element subset of $\Z_{12}$. The \emph{major triad} on root $r$ is $\{r,r+4,r+7\}$ and the
+\emph{minor triad} on root $r$ is $\{r,r+3,r+7\}$.
+\end{definition}
+
+Going around the pitch-class circle, the three notes of a trichord cut it into three gaps $(n_1,n_2,n_3)$ with
+$n_1+n_2+n_3=12$. The major triad has gaps $(4,3,5)$ and the minor triad $(3,4,5)$: the same numbers in the
+opposite cyclic order. This \emph{interval partition} is the key parameter of Catanzaro's generalized Tonnetze
+(Chapter~\ref{ch:topology}).
+
+\section{Transposition, inversion and the dihedral group}
+The \emph{transposition} $T_n(x)=x+n$ and the \emph{inversion} $I_n(x)=n-x$ are bijections of $\Z_{12}$. They
+satisfy
+\[
+T_mT_n=T_{m+n},\qquad I_mI_n=T_{m-n},\qquad T_mI_n=I_{m+n},\qquad I_nT_m=I_{n-m}.
+\]
+The 24 maps $\{T_n,I_n\}$ form a group, the dihedral group $D_{12}$ of order 24 (the symmetries of a regular
+12-gon: rotations are transpositions, reflections are inversions). $D_{12}$ acts on trichords; transposition
+preserves major and minor, while every inversion swaps them: for example $I_0(\{0,4,7\})=\{0,8,5\}$, which is F
+minor. Hence $D_{12}$ acts \emph{simply transitively} on the 24 consonant triads: for any two triads there is
+exactly one $T_n$ or $I_n$ carrying one to the other.
+
+\begin{remark}
+Under the action of $D_{12}$ the 220 trichords of $\Z_{12}$ fall into 12 orbits (the trichordal \emph{set
+classes}); under transpositions alone they fall into 19 orbits. \Cref{sec:gentonnetz} computes the topology of the
+Tonnetz associated with each of the 12 set classes.
+\end{remark}
+
+\section{Graphs}
+A \emph{graph} $G=(V,E)$ is a set of vertices with a set of edges, each joining two vertices. The \emph{degree}
+of a vertex is its number of edges; a graph in which every vertex has degree 3 is \emph{cubic} (3-regular). A
+graph is \emph{bipartite} if its vertices split into two parts with all edges running between the parts. The
+\emph{distance} between two vertices is the number of edges on a shortest path, and the \emph{diameter} is the
+largest distance.
+
+\begin{definition}
+A \emph{Hamiltonian cycle} in $G$ is a closed walk that visits every vertex exactly once and returns to its start.
+A graph that has one is \emph{Hamiltonian}.
+\end{definition}
+
+Unlike its cousin the Eulerian circuit (traverse every \emph{edge} once, decided in linear time by checking vertex
+degrees), deciding whether a graph is Hamiltonian is NP-complete in general. For the 24-vertex graphs of this
+report, exhaustive backtracking is instantaneous (Chapter~\ref{ch:ham}).
+
+If a graph is drawn on a surface without crossings, its \emph{dual} has one vertex per face and joins two faces
+that share an edge. The dual of the triangulated Tonnetz is the graph of triads connected by $P$, $L$ and $R$.
+
+\section{Simplicial complexes, Euler characteristic and surfaces}
+\begin{definition}
+An (abstract) \emph{simplicial complex} is a set $V$ of vertices together with a family of finite subsets
+(simplices) closed under taking subsets. A 2-dimensional complex has vertices, edges (2-sets) and triangles
+(3-sets). Its \emph{f-vector} is $(V,E,F)$ and its \emph{Euler characteristic} is $\chi=V-E+F$.
+\end{definition}
+A \emph{chord complex} has pitch classes as vertices and a chosen family of trichords as triangles
+\citep{bigo2013}. A \emph{$\Delta$-complex} is the slightly more general object obtained by gluing triangles
+along edges, where two triangles may share more than one edge; the Euler characteristic is defined the same way.
+
+\paragraph{Homology in one paragraph.} Orient each edge and triangle. The boundary maps
+$\partial_1$ (edge $\mapsto$ end $-$ start) and $\partial_2$ (triangle $\mapsto$ signed sum of its three edges)
+are matrices; the \emph{Betti numbers} over a field $k$ are
+\[
+b_0=V-\operatorname{rk}\partial_1,\qquad b_1=E-\operatorname{rk}\partial_1-\operatorname{rk}\partial_2,\qquad
+b_2=F-\operatorname{rk}\partial_2,
+\]
+and satisfy $\chi=b_0-b_1+b_2$. Informally $b_0$ counts components, $b_1$ independent loops and $b_2$ enclosed
+cavities. Computing them over both $\QQ$ and $\Z_2$ detects non-orientability: a closed non-orientable surface
+has $b_2=0$ over $\QQ$ but $b_2=1$ over $\Z_2$.
+
+\begin{theorem}[Classification of closed surfaces]\label{thm:classification}
+Every connected closed surface is homeomorphic to exactly one of: the sphere $S^2$, a connected sum of $g\ge1$ tori
+(orientable, $\chi=2-2g$), or a connected sum of $k\ge1$ real projective planes (non-orientable, $\chi=2-k$).
+It is determined by its Euler characteristic and its orientability.
+\end{theorem}
+This is exactly the theorem quoted on the presentation's slide ``Now how does the surface look?''. Orientable
+surfaces always have \emph{even} $\chi$. Consequently a closed surface with $\chi=1$ must be non-orientable, with
+$k=1$: it is the real projective plane $\mathbb{RP}^2$ (Chapter~\ref{ch:nonorient}). Surfaces with boundary
+satisfy analogous rules: the cylinder (annulus) and the M\"obius band both have $\chi=0$ and are distinguished
+by orientability.
+
+\paragraph{Testing orientability by computer.} A triangulated surface is orientable if one can choose a cyclic
+orientation for every triangle so that each shared edge is traversed in opposite directions by its two
+triangles. A breadth-first search that propagates the orientation from triangle to triangle either succeeds or
+finds a contradiction; this is \code{SimplicialComplex.is\_orientable()} in \code{tonnetzkit}.
+
+\begin{notebookbox}
+\sheet{01\_pitch\_classes.ipynb}: pitch-class arithmetic, the 24 permutations $\{T_n,I_n\}$ of the triads, and the
+19 transposition classes and 12 set classes of trichords.
+\end{notebookbox}
+
+\begin{qa}
+\Qu{Which two equivalences turn pitches into the 12 pitch classes?}
+\A{Octave equivalence and enharmonic equivalence (the latter is exact only in equal temperament).}
+\Qu{Verify that $I_0$ maps C major to F minor.}
+\A{$I_0(x)=-x$: $\{0,4,7\}\mapsto\{0,8,5\}=\{F,A\flat,C\}$, the F minor triad.}
+\Qu{Why does $D_{12}$ act simply transitively on the 24 consonant triads?}
+\A{There are 24 group elements and 24 triads; transpositions move C major to every major triad, inversions move
+it to every minor triad, and no nontrivial element fixes C major (its three gaps are all different, so it has no
+symmetry). An orbit of size 24 with trivial stabiliser means simple transitivity.}
+\Qu{What is the difference between a Hamiltonian cycle and an Eulerian circuit?}
+\A{A Hamiltonian cycle visits every vertex once; an Eulerian circuit traverses every edge once. The latter exists
+in a connected graph iff all degrees are even; the former has no such simple criterion.}
+\Qu{A closed surface has $\chi=-2$. What can it be?}
+\A{Either the orientable surface of genus 2 ($2-2g=-2$) or the non-orientable connected sum of four projective
+planes ($2-k=-2$). Orientability decides which.}
+\Qu{How can homology over two different fields reveal non-orientability?}
+\A{For a closed connected surface, $b_2=1$ over $\Z_2$ always, but $b_2=1$ over $\QQ$ only if it is orientable.
+A mismatch ($b_2=0$ over $\QQ$) therefore certifies non-orientability.}
+\end{qa}

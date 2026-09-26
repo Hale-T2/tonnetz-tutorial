@@ -1,0 +1,142 @@
+\documentclass[11pt,a4paper,oneside]{report}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{mathpazo}
+
+\usepackage{microtype}
+\usepackage[margin=2.5cm,headheight=14pt]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx,booktabs,array,enumitem,xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=green!40!black,urlcolor=blue!60!black]{hyperref}
+\usepackage[capitalise,noabbrev]{cleveref}
+\usepackage{listings}
+
+\definecolor{accent}{HTML}{4A2F7A}
+\titleformat{\chapter}[display]{\normalfont\huge\bfseries\color{accent}}{\large\scshape Chapter \thechapter}{8pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-10pt}{18pt}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\scshape\leftmark}\fancyhead[R]{\small H.~Tureli}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\setlist{itemsep=2pt,topsep=4pt}
+
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newtcolorbox{keybox}[1][]{colback=accent!4,colframe=accent!70,fonttitle=\bfseries,title={#1},sharp corners,boxrule=0.6pt}
+\newtcolorbox{notebookbox}{colback=green!3,colframe=green!45!black,sharp corners,boxrule=0.5pt,
+  title={\small\bfseries Python sheet},fonttitle=\small}
+\newtcolorbox{correctionbox}{colback=orange!5,colframe=orange!70!black,sharp corners,boxrule=0.5pt,
+  title={\small\bfseries A note on the original slides},fonttitle=\small}
+\newtcolorbox{qabox}{colback=gray!4,colframe=gray!55,sharp corners,boxrule=0.5pt,breakable,
+  title={\bfseries Questions and answers},fonttitle=\normalsize}
+\newcommand{\Qu}[1]{\item[\textbf{Q.}] #1}
+\newcommand{\A}[1]{\\[-2pt]\textbf{A.}~#1\par\smallskip}
+\newenvironment{qa}{\begin{qabox}\begin{enumerate}[leftmargin=1.6em,label={}]}{\end{enumerate}\end{qabox}}
+
+\lstset{basicstyle=\ttfamily\small,columns=fullflexible,keepspaces=true,frame=single,
+  rulecolor=\color{gray!40},backgroundcolor=\color{gray!4},xleftmargin=4pt,xrightmargin=4pt,
+  keywordstyle=\color{accent}\bfseries,language=Python,showstringspaces=false}
+
+\newcommand{\Z}{\mathbb{Z}}\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\sheet}[1]{\texttt{book/#1}}
+\newcommand{\code}[1]{\texttt{#1}}
+
+\hypersetup{pdftitle={Euler's Tonnetz, Graph Theory and Geometry: A Tutorial Review},pdfauthor={Hale Tureli}}
+
+\begin{document}
+\begin{titlepage}
+\centering
+\vspace*{2.2cm}
+{\color{accent}\rule{\linewidth}{1pt}}\\[14pt]
+{\Huge\bfseries Euler's Tonnetz, Graph Theory\\[6pt] and Geometry}\\[12pt]
+{\LARGE A Tutorial Review with Reproducible Python Sheets}\\[10pt]
+{\color{accent}\rule{\linewidth}{1pt}}\\[2cm]
+{\Large Hale Tureli}\\[6pt]
+{\large Technical Report}\\[4pt]
+{\normalsize September 2026}\\[2.5cm]
+\begin{minipage}{0.82\linewidth}\small
+\textbf{Abstract.} The Tonnetz (``tone network'') of Euler arranges the twelve pitch classes so that consonant
+triads become triangles of a lattice. Read as mathematics, it is simultaneously a graph, a group action and a
+triangulated surface. This report is a self-contained tutorial that develops the subject from first principles
+for students while collecting the computational and empirical literature for researchers. We (i) build the
+Tonnetz as a quotient of $\Z^2$ and prove it is a torus; (ii) study the neo-Riemannian operations $P$, $L$, $R$
+and the dual ``chicken-wire'' graph; (iii) enumerate its Hamiltonian cycles, confirming $124$ directed
+($62$ undirected) cycles and classifying them into eight orbits under transposition and inversion;
+(iv) reproduce Catanzaro's topological classification of generalized Tonnetze for $N=12$;
+(v) analyse seventh-chord and edge-labelled Tonnetze, where non-orientable surfaces such as the real
+projective plane appear; and (vi) place four public corpora (Bach, Beethoven, two pop collections) on the
+Tonnetz, finding that classical progressions are more Tonnetz-compact than their own shuffled chords while pop
+progressions are not. Every chapter ends with questions and answers, and every number is reproduced by an
+executable notebook in the accompanying repository.
+\end{minipage}
+\vfill
+{\small Developed from the DREAMS 2025 project presentation \emph{Euler's Tonnetz, Graph Theory, and Geometry}
+by S.~Doran, K.~Tsang and H.~Tureli (advisor: J.~Jones).}
+\end{titlepage}
+
+\pagenumbering{roman}
+\tableofcontents
+\clearpage
+
+\chapter*{How to read this report}
+\addcontentsline{toc}{chapter}{How to read this report}
+\markboth{How to read this report}{}
+The report is written for two audiences at once. \emph{Students} (final-year school, first-year university, or
+musicians curious about mathematics) should read Chapters~1--5 in order, running the matching Python sheet after
+each chapter. \emph{Researchers} can skim Chapters~2--4 for notation and go straight to the computational results
+in Chapters~5--8 and the open problems in Chapter~9.
+
+\paragraph{Companion repository.} All code lives in a single repository with four parts:
+\code{tonnetzkit/} (a small Python package), \code{book/} (ten Jupyter notebooks forming a Jupyter Book of ``Python
+sheets''), \code{scripts/} (figure generation, data download and the corpus study), and \code{tests/} (regression
+tests pinning every numerical claim in the text). Boxes like the one below point to the relevant sheet.
+\begin{notebookbox}
+\sheet{00\_welcome.ipynb} gives a five-minute tour: it builds the 24 triads, applies $P,L,R$, counts Hamiltonian
+cycles and plays a chord progression, all with no external data.
+\end{notebookbox}
+
+\paragraph{Conventions.} Pitch classes are integers mod 12 with $C=0$, $C\sharp=1,\dots,B=11$. We write major
+triads by their root (C, F$\sharp$) and minor triads with a lower-case ``m'' (Am). Sharps are used throughout, as in
+the original slides; in 12-tone equal temperament A$\sharp$ and B$\flat$ name the same pitch class.
+
+\paragraph{Relation to the original presentation.} The report expands every slide of the DREAMS 2025 presentation.
+Where a slide simplified or mis-stated something, an orange box explains the correction; these are offered in the
+spirit of peer review of our own work, not as criticism of a student presentation.
+
+\clearpage
+\pagenumbering{arabic}
+\input{ch1_intro}
+\input{ch2_prelims}
+\input{ch3_tonnetz}
+\input{ch4_plr}
+\input{ch5_hamilton}
+\input{ch6_topology}
+\input{ch7_nonorientable}
+\input{ch8_data}
+\input{ch9_outlook}
+
+\appendix
+\input{appendix}
+
+\chapter*{Acknowledgements}
+\addcontentsline{toc}{chapter}{Acknowledgements}
+This report grew out of a DREAMS 2025 group project. I thank my co-presenters Saoirse Doran and Kyle Tsang, whose
+diagrams (the hand-drawn dual graph and the whole-tone ``edge Tonnetz'') are the starting point of Chapters~4 and~7,
+and our advisor James Jones for guidance. I am grateful to the maintainers of the open datasets and software used
+here: DCMLab (ABC corpus), NYU MARL (RWC-Pop and USPop chord annotations), the music21, librosa and NetworkX
+projects, and O.~C\'ifka for TonnetzViz, whose layout inspired the slide figures.
+
+\bibliographystyle{abbrvnat}
+\bibliography{references}
+\end{document}

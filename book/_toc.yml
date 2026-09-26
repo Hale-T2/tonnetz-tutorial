@@ -1,0 +1,12 @@
+format: jb-book
+root: 00_welcome
+chapters:
+  - file: 01_pitch_classes
+  - file: 02_tonnetz_torus
+  - file: 03_plr_dual
+  - file: 04_hamiltonian
+  - file: 05_generalized_tonnetze
+  - file: 06_edge_tonnetz
+  - file: 07_corpus_analysis
+  - file: 08_audio_centroid
+  - file: 09_research_sandbox

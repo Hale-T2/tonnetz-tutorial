@@ -1,0 +1,13 @@
+data/external/
+book/_build/
+__pycache__/
+*.egg-info/
+.ipynb_checkpoints/
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.bbl
+report/*.blg
+report/*.fls
+report/*.fdb_latexmk

@@ -1,0 +1,70 @@
+\chapter{Software ecosystem and open problems}\label{ch:outlook}
+
+\section{Tools}
+\begin{table}[h]\centering\small
+\begin{tabular}{@{}p{3.0cm}p{7.0cm}p{5.0cm}@{}}\toprule
+Tool & What it does & Where\\\midrule
+TonnetzViz \citep{cifka2016} & real-time Tonnetz display of MIDI or keyboard input in the browser & \url{github.com/cifkao/tonnetz-viz}\\
+HexaChord \citep{bigo2013} & chord complexes, trajectories, compliance measures & Bigo's software page (Java)\\
+music21 \citep{cuthbert2010} & score parsing, chordify, Roman numerals, corpus & \code{pip install music21}\\
+librosa \citep{mcfee2015} & chroma and tonal-centroid (\code{tonnetz}) features & \code{pip install librosa}\\
+mir\_eval \citep{raffel2014} & chord-label parsing and evaluation & \code{pip install mir\_eval}\\
+ChoCo tools \citep{deberardinis2023} & JAMS conversion and harmony knowledge graphs & \url{github.com/smashub/choco}\\
+\code{tonnetzkit} (this report) & triads, $PLR$, dual graph, Hamiltonian cycles, chord complexes, homology, edge gluings, corpus loaders & companion repository\\\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Open problems}
+The following projects range from student exercises to research questions. Each has a starting point in
+\sheet{09\_research\_sandbox.ipynb}.
+
+\paragraph{1. Canonical edge Tonnetze.} Chapter~\ref{ch:nonorient} showed that 12 whole-tone shell chords admit
+about $3\times10^{12}$ edge gluings producing surfaces from the sphere to seven cross-caps. Classify them exactly up to
+the symmetries of the whole-tone scale, and find a musically motivated gluing rule (for example, requiring adjacent
+chords to share two notes) that selects a unique surface. Which rules produce the projective plane of the slide?
+
+\paragraph{2. Hamiltonian cycles for seventh chords.} The graph on the 48 dominant, minor, half-diminished and
+major seventh chords, joined when they share three notes, generalises $\Gamma$. How many Hamiltonian cycles does it
+have, and how do they fall into symmetry classes? Exhaustive backtracking needs pruning here; compare the seventh-chord
+groups of \citep{cannas2017} and the generalized dual of \citep{cannas2018}.
+
+\paragraph{3. Perception.} Test whether listeners prefer Hamiltonian cycles to matched controls (Chapter~\ref{ch:ham}),
+and whether ratings track voice-leading cost (28 versus 36 semitones in \cref{tab:ham}).
+
+\paragraph{4. Scaling the corpus study.} Apply the pipeline of Chapter~\ref{ch:data} to ChoCo and Chordonomicon,
+stratified by genre and decade. Does the observed-minus-shuffled distance separate styles? Does it change over time?
+
+\paragraph{5. Better metrics.} Combine the Tonnetz metric with voice-leading and functional information, or learn a
+metric from data, and compare with Tonnetz-trajectory descriptors \citep{karystinaios2020} and image-like Tonnetz
+inputs to neural networks \citep{chuan2018}.
+
+\paragraph{6. Topological fingerprints.} Compute persistent homology of the chord complexes visited by pieces
+\citep{bergomi2016}, and relate Betti-number signatures to style.
+
+\paragraph{7. Configurations.} Boland and Hughston interpret the Tonnetz via its Levi graph as a $(12_3)$
+configuration and build analogous tone networks for pentatonic and diatonic systems \citep{boland2025,boland2026}.
+Which of their networks carry Hamiltonian cycles, and what are their dual surfaces?
+
+\section{Conclusion}
+Euler's small lattice of fifths and thirds turns out to be a triangulated torus, a Cayley-like graph of a dihedral
+group, and a coordinate system for real music. Its dual graph has exactly 62 Hamiltonian cycles in eight symmetry
+classes; its generalizations produce cylinders, spheres, M\"obius bands and, once chords are glued along notes,
+projective planes and higher non-orientable surfaces. Placed against data, it separates the common-tone logic of
+classical progressions from the whole-step logic of pop. The Tonnetz is best seen not as the one true map of
+harmony but as a precise mathematical model whose predictions can be computed, tested and refined, which is what
+the accompanying Python sheets are designed to let readers do.
+
+\begin{qa}
+\Qu{Why is exhaustive search harder for seventh chords than for triads?}
+\A{The graph is larger (48 vertices) and has higher degree, so the number of partial paths grows much faster; pruning
+(e.g.\ forcing edges at degree-2 vertices of the remaining graph) or dedicated solvers become necessary.}
+\Qu{What would a positive result in open problem 4 look like?}
+\A{A stable, significant difference in observed-minus-shuffled Tonnetz distance between genres or eras across
+large corpora, robust to the choice of chord reduction.}
+\Qu{Give one limitation of the Tonnetz as a model of harmonic distance.}
+\A{It ignores function and register and treats stepwise parallel motion between major triads as far, although such
+motion is idiomatic and not perceived as remote in pop.}
+\Qu{Which chapter's result would you extend first, and why?}
+\A{Any answer with a reason is acceptable; for example, Chapter~\ref{ch:nonorient}, because the space of edge gluings
+is large, little studied and computationally accessible with the provided code.}
+\end{qa}

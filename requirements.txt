@@ -1,0 +1,9 @@
+numpy
+networkx
+matplotlib
+pandas
+librosa>=0.10
+music21>=9
+jupyter
+nbformat
+pytest

@@ -1,0 +1,12 @@
+title: "Tonnetz, Graphs and Geometry — Python Sheets"
+author: Hale Tureli
+copyright: "2026"
+execute:
+  execute_notebooks: cache
+  timeout: 900
+repository:
+  url: https://github.com/Hale-T2/tonnetz-tutorial
+  path_to_book: book
+  branch: main
+html:
+  use_repository_button: true
